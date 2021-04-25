@@ -4,10 +4,11 @@ class Todo {
     }
 }
 
-Todo.prototype.title = "TEST";
+Todo.prototype.title;
 Todo.prototype.description;
 Todo.prototype.dueDate;
 Todo.prototype.priority;
+Todo.prototype.project;
 
 class User {
     constructor(name) {
