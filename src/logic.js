@@ -1,33 +1,47 @@
+import {Todo, User, Projects} from "./Class"
+
 const logic = () => {
-    const newTask = (btn, array, input, clas) => {
-        btn.addEventListener("click", (e) => {
-            if (document.querySelector("form").checkValidity()) {
-                e.preventDefault();
-                clas.title = input[0].value;
-                clas.description = input[1].value;
-                clas.dueDate = input[2].value;
-                if (input[3].checked == true) {
-                clas.priority = "low";
-                } else if (input[4].checked == true) {
-                    clas.priority = "medium";
+    const newTask = (array, input, task, currentProject) => {
+                task.title = input[2].value;
+                task.description = input[3].value;
+                task.dueDate = input[4].value;
+                task.project = currentProject;
+                if (input[5].checked == true) {
+                task.priority = "low";
+                } else if (input[6].checked == true) {
+                    task.priority = "medium";
                 } else {
-                    clas.priority = "high";
+                    task.priority = "high";
                 }
-                array.push(clas);
-                return console.log(array);
-            }
-        })
+                array.push(task);
+    }
+
+    const newProject = (array, input) => {
+        let project = input[0].value;
+        array.push(project);
     }
 
     const removeProject = target => {
-        for (let i = 0; i< target.length; i++) {
+        for (let i = 0;  i < target.length; i++) {
             target[i].addEventListener("click", () => {
                 target[i].parentElement.remove();
             })
         }
     }
 
-    return {newTask, removeProject};
+    const currentProject = (array, currentProject) => {
+                currentProject = array;
+                console.log("test");
+           
+    
+         
+    }
+
+    const defaultProjects = (array, project) => {
+        array.push(project);
+    }
+
+    return {newTask, removeProject, newProject, currentProject, defaultProjects};
 }
 
 export default logic

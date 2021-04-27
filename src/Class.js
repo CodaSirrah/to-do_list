@@ -8,7 +8,6 @@ Todo.prototype.title;
 Todo.prototype.description;
 Todo.prototype.dueDate;
 Todo.prototype.priority;
-Todo.prototype.project;
 
 class User {
     constructor(name) {
@@ -16,4 +15,11 @@ class User {
     }
 }
 
-export  {Todo, User}
+class Projects {
+    constructor(title) {
+        this.title = title;
+        this.tasks = [];
+    }
+}
+
+export  {Todo, User, Projects}

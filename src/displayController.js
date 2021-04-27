@@ -1,19 +1,20 @@
 const displayController = () => {
-  const displayWelcome = (target, user) => {
+  const displayWelcome = (target) => {
       let welcome = document.createElement("h1");
-      welcome.innerHTML = `Welcome ${user}`;
+      welcome.innerHTML = `Welcome ${localStorage.getItem("userName")}`;
       target.appendChild(welcome);
-      
   }
-
-  const displayForm = (btn, target) => {
+  
+  const displayForm = (btn, target, scale) => {
       btn.addEventListener("click", () => {
           if (target.classList.contains('hidden')) {
               target.classList.remove('hidden');
               setTimeout(function () {
                 target.classList.remove('visuallyhidden');
               }, 20);
-              target.classList.add("scale");
+              if (scale == "true") {
+                target.classList.add("scale");
+              }
             } else {
               target.classList.add('visuallyhidden');    
               target.addEventListener('transitionend', function(e) {
@@ -34,101 +35,113 @@ const displayController = () => {
       })
   }
 
-  const projectForm = (target, input, label) => {
-    if (!(target.children[target.children.length -1] == (document.querySelector("#projectForm")))) {
-      let form = document.createElement("form");
-      form.setAttribute("id", "projectForm");
+  const showProjects = (array, target, title, currentProject, currentProjectNumber) => {
+    for (let i = array.length - 1; i < array.length; i++) {
+      let li = document.createElement("li");
+      li.classList.add("projects");
+      li.setAttribute("data-selected", "false");
       let div = document.createElement("div");
-      let label = document.createElement("label");
-      label.setAttribute("for", "projTitle");
-      label.setAttribute("id", "projLabel");
-      label.innerHTML = "Project Name";
-      let input = document.createElement("input");
-      input.setAttribute("type", "text");
-      input.setAttribute("name", "projTitle");
-      input.setAttribute("id", "projInput");
-      input.required = true;
-      input.autocomplete = "off";
-      input.setAttribute("size", "20");
-      let submit = document.createElement("submit");
-      submit.innerHTML = "✓";
-      submit.setAttribute("id", "projSubmit");
-      div.appendChild(label);
-      div.appendChild(input);
-      div.appendChild(submit);
-      form.appendChild(div);
-      target.appendChild(form);
-      hideLabel(input, label);
-    } else {
-      removeProjectForm(target);
-    }
-  }
-
-  const removeProjectForm = target => {
-    target.children[target.children.length -1].remove();
-  }
-
-  const currentProject = target => {
-    for (let i = 0; i < target.length; i++) {
-      target[i].addEventListener("click", () => {
-        for (let j = 0; j < target.length; j++) {
-          target[j].dataset.selected = "false";
-          target[j].classList.remove("selected");
+      div.classList.add("projectBG");
+      let p = document.createElement("p");
+      p.innerHTML = title;
+      div.appendChild(p);
+      let button = document.createElement("button");
+      button.innerHTML = "x";
+      button.classList.add("remove");
+      li.appendChild(div);
+      li.appendChild(button);
+      div.classList.add("hoverBG");
+      button.addEventListener("click", () => {
+        for (i = 0; i < array.length; i++) {
+          if (array[i].title == p.innerHTML) {
+            array.splice(i, 1);
+          }
         }
-        target[i].classList.add("selected");
-        return target[i].selected = "true";
+        li.remove();
+        console.log(array);
       })
-    }
-  }
-  
-  const highlightProjects = (action, response) => {
-    for (let i = 0; i < action.length; i++) {
-      action[i].addEventListener("mouseover", () => {
-        response[i].classList.add("hoverBG");
+      div.addEventListener("click", () => {  
+        currentProject = div;
+        for (i = 0; i < array.length; i++) {
+          if (array[i].title == currentProject.childNodes[0].innerHTML)
+          currentProjectNumber = i;
+          console.log(currentProjectNumber);
+        }
+        console.log(currentProject); 
+        for (i = 0; i <= array.length; i++) {
+          document.querySelectorAll("div")[i].parentElement.classList.remove("selectedBG");
+        }
+        div.parentElement.classList.add("selectedBG");
       })
-      action[i].addEventListener("mouseleave", () => {
-        response[i].classList.remove("hoverBG");
-      })
+      target.appendChild(li);
     }
   }
 
-  const highlightNewProject = (action, response) => {
-    action.addEventListener("mouseover", () => {
-      response.classList.add("hoverBG");
-    })
-    action.addEventListener("mouseleave", () => {
-      response.classList.remove("hoverBG");
-    })
-  }
-  
-  const addProject = (target, title) => {
-    let li = document.createElement("li");
-    li.classList.add("projects");
-    li.setAttribute("data-selected", "false");
-    let div = document.createElement("div");
-    div.classList.add("projectBG");
-    let p = document.createElement("p");
-    p.innerHTML = title;
-    div.appendChild(p);
-    let button = document.createElement("button");
-    button.innerHTML = "x";
-    button.classList.add("remove");
-    li.appendChild(div);
-    li.appendChild(button);
-    target.appendChild(li);
-    displayController().highlightNewProject(div, li);
+  const showTasks = (main, content, task) => {
+    content.remove();
+    content = document.createElement("div");
+    content.setAttribute("id", "content");
+    main.appendChild(content);
+    for (let i = 0; i < task.length; i++) {
+      let div = document.createElement("div");
+      div.classList.add("itemsContainer");
+
+      let taskCheckboxDiv = document.createElement("div");
+      let taskCheckbox = document.createElement("input");
+      taskCheckbox.setAttribute("type", "checkbox");
+      taskCheckboxDiv.appendChild(taskCheckbox);
+      div.appendChild(taskCheckboxDiv);
+
+      let taskNameDiv = document.createElement("div");
+      let taskName = document.createElement("p");
+      taskName.innerHTML = task[i].title;
+      taskNameDiv.appendChild(taskName);
+      div.appendChild(taskNameDiv);
+      
+      let taskDescriptionDiv = document.createElement("div");
+      let taskDescription = document.createElement("p");
+      taskDescription.innerHTML = task[i].description;
+      taskDescriptionDiv.appendChild(taskDescription);
+      div.appendChild(taskDescriptionDiv);
+
+      let taskDateDiv= document.createElement("div");
+      let taskDate = document.createElement("p");
+      taskDate.innerHTML = task[i].dueDate;
+      taskDateDiv.appendChild(taskDate);
+      div.appendChild(taskDateDiv);
+
+      let taskPriorityDiv = document.createElement("div");
+      let taskPriority = document.createElement("p");
+      taskPriority.innerHTML = task[i].priority;
+      taskCheckboxDiv.appendChild(taskPriority);
+      div.appendChild(taskCheckboxDiv);
+
+      let taskRemoveDiv = document.createElement("div");
+      let taskRemove = document.createElement("button");
+      taskRemove.innerHTML = "🗑️";
+      taskRemoveDiv.appendChild(taskRemove);
+      div.appendChild(taskRemoveDiv);
+      content.appendChild(div);
+    }
   }
 
-  return {
-      displayWelcome,
-      displayForm,
-      hideLabel,
-      projectForm,
-      currentProject,
-      highlightProjects,
-      addProject,
-      highlightNewProject
-  };
+  // const removeProject = (target, array) => {
+  //   for (let i = array.length; i < target.length; i++) {
+  //     target[i].addEventListener("click", () => {
+  //       if (array[i] == undefined && array[i - 1 == undefined]) {
+  //         target[i + 1].parentElement.remove();
+  //       }
+  //       else if (array[i] == undefined && array[i + 1] == undefined){
+  //         target[i - 1].parentElement.remove();
+  //       }
+  //       else {
+  //         target[i].parentElement.remove();
+  //       }
+  //     })
+  //   } 
+  // }
+
+  return {displayWelcome, displayForm, hideLabel, showProjects, showTasks};
 }
 
 export default displayController
