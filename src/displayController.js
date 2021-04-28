@@ -35,7 +35,7 @@ const displayController = () => {
       })
   }
 
-  const showProjects = (array, target, title, currentProject, currentProjectNumber) => {
+  const showProjects = (array, target, title) => {
     for (let i = array.length - 1; i < array.length; i++) {
       let li = document.createElement("li");
       li.classList.add("projects");
@@ -51,29 +51,34 @@ const displayController = () => {
       li.appendChild(div);
       li.appendChild(button);
       div.classList.add("hoverBG");
-      button.addEventListener("click", () => {
-        for (i = 0; i < array.length; i++) {
-          if (array[i].title == p.innerHTML) {
-            array.splice(i, 1);
-          }
-        }
-        li.remove();
-        console.log(array);
-      })
-      div.addEventListener("click", () => {  
-        currentProject = div;
-        for (i = 0; i < array.length; i++) {
-          if (array[i].title == currentProject.childNodes[0].innerHTML)
-          currentProjectNumber = i;
-          console.log(currentProjectNumber);
-        }
-        console.log(currentProject); 
-        for (i = 0; i <= array.length; i++) {
-          document.querySelectorAll("div")[i].parentElement.classList.remove("selectedBG");
-        }
-        div.parentElement.classList.add("selectedBG");
-      })
       target.appendChild(li);
+      div.addEventListener("click", () => {
+        for (let i = 0; i < array.length; i++) {
+          document.querySelectorAll("li")[i].classList.remove("selectedBG");
+        }
+        li.classList.add("selectedBG");
+        
+      })
+    }
+  }
+
+  const removeProject = (target) => {
+    for (let i = 0; i < target.length; i++) {
+        target[i].removeEventListener("click", removeProjectEvent);
+    }
+    
+    for (let i = 0; i < target.length; i++) {
+        target[i].addEventListener("click", removeProjectEvent);
+    }
+}
+
+function removeProjectEvent()  {
+    this.parentElement.remove();
+}
+
+  const highlightSelected = (target, current, array) => {
+    for (let i = array.length - 1; i < array.length; i++) {
+      
     }
   }
 
@@ -125,23 +130,7 @@ const displayController = () => {
     }
   }
 
-  // const removeProject = (target, array) => {
-  //   for (let i = array.length; i < target.length; i++) {
-  //     target[i].addEventListener("click", () => {
-  //       if (array[i] == undefined && array[i - 1 == undefined]) {
-  //         target[i + 1].parentElement.remove();
-  //       }
-  //       else if (array[i] == undefined && array[i + 1] == undefined){
-  //         target[i - 1].parentElement.remove();
-  //       }
-  //       else {
-  //         target[i].parentElement.remove();
-  //       }
-  //     })
-  //   } 
-  // }
-
-  return {displayWelcome, displayForm, hideLabel, showProjects, showTasks};
+  return {displayWelcome, displayForm, hideLabel, showProjects, removeProject, showTasks};
 }
 
 export default displayController
