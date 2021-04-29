@@ -86,6 +86,10 @@ function removeProjectEvent()  {
     content.remove();
     content = document.createElement("div");
     content.setAttribute("id", "content");
+    let header = document.createElement("h3");
+    header.innerHTML = "Tasks";
+    header.setAttribute("id", "tasks");
+    content.appendChild(header);
     main.appendChild(content);
     for (let i = 0; i < task.length; i++) {
       let div = document.createElement("div");
@@ -95,40 +99,65 @@ function removeProjectEvent()  {
       let taskCheckbox = document.createElement("input");
       taskCheckbox.setAttribute("type", "checkbox");
       taskCheckboxDiv.appendChild(taskCheckbox);
+      taskCheckboxDiv.classList.add("item");
       div.appendChild(taskCheckboxDiv);
 
-      let taskNameDiv = document.createElement("div");
-      let taskName = document.createElement("p");
-      taskName.innerHTML = task[i].title;
-      taskNameDiv.appendChild(taskName);
-      div.appendChild(taskNameDiv);
+        let taskNameDiv = document.createElement("div");
+        let taskName = document.createElement("p");
+        taskName.innerHTML = task[i].title;
+        taskNameDiv.appendChild(taskName);
+        taskNameDiv.classList.add("item");
+        div.appendChild(taskNameDiv);
       
       let taskDescriptionDiv = document.createElement("div");
       let taskDescription = document.createElement("p");
       taskDescription.innerHTML = task[i].description;
       taskDescriptionDiv.appendChild(taskDescription);
+      taskDescriptionDiv.classList.add("item");
       div.appendChild(taskDescriptionDiv);
 
-      let taskDateDiv= document.createElement("div");
-      let taskDate = document.createElement("p");
-      taskDate.innerHTML = task[i].dueDate;
-      taskDateDiv.appendChild(taskDate);
-      div.appendChild(taskDateDiv);
+        let taskDateDiv= document.createElement("div");
+        let taskDate = document.createElement("p");
+        taskDate.innerHTML = task[i].dueDate;
+        taskDateDiv.appendChild(taskDate);
+        taskDateDiv.classList.add("item");
+        div.appendChild(taskDateDiv);
 
       let taskPriorityDiv = document.createElement("div");
       let taskPriority = document.createElement("p");
       taskPriority.innerHTML = task[i].priority;
-      taskCheckboxDiv.appendChild(taskPriority);
-      div.appendChild(taskCheckboxDiv);
+      taskPriorityDiv.appendChild(taskPriority);
+      taskPriorityDiv.classList.add("item");
+      div.appendChild(taskPriorityDiv); 
 
       let taskRemoveDiv = document.createElement("div");
       let taskRemove = document.createElement("button");
       taskRemove.innerHTML = "🗑️";
+
+      taskRemove.addEventListener("click", () => {
+        removeItems(task, taskName, div);
+         
+      })
+
       taskRemoveDiv.appendChild(taskRemove);
+      taskRemoveDiv.classList.add("item");
       div.appendChild(taskRemoveDiv);
+      console.log(div);
+
+      
       content.appendChild(div);
+      
     }
   }
+  function removeItems(task, taskName, div) {
+    for (let i = 0; i < task.length; i++) {
+      if(task[i].title == taskName.innerHTML) {
+        task.splice(i, 1);
+      }
+    }
+    div.remove();
+  }
+  
 
   return {displayWelcome, displayForm, hideLabel, showProjects, removeProject, showTasks};
 }
