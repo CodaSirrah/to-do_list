@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset = "UTF-8">
+        <title>Todo-list</title>
+        <link rel="stylesheet" href="../src/style.css">
+        <link href="https://fonts.googleapis.com/css2?family=Zen+Dots&display=swap" rel="stylesheet">
+        <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+    </head>
+    <body>
+        <div id ="sidebar">
+            <h2>Projects</h2>
+            <hr>
+            <ul></ul>
+        </div>
+        <div id="sidebar2">
+            <button id="projectBtn">+</button>
+            <p id="project">New Project</p>
+        </div>
+        <div id="main">
+            <div id="nav">
+                    <h3>Add Task</h3>
+                    <button id="taskButton">+</button>
+            </div>
+
+            <form id="projectForm" class="hidden visuallyhidden" action="">
+                <div>
+                    <label for="projectTitle" id="projectLabel">Project Name</label>
+                    <input type="text" name="projectTitle" id="projectInput" autocomplete="off" required>
+                    <input type="submit" id="projectSubmit" value="✓">
+                </div>
+            </form>
+            
+            <div id="formContainer" class="hidden visuallyhidden">
+                <form id="taskForm" action="">
+                    <div class="labelContainers">
+                        <label for="title" id="titleLabel" class="labels">title</label>
+                        <input type="text" name="title" id="title" autocomplete="off" required>
+                    </div>
+                    <div class="labelContainers">
+                        <label for="description" id="descriptionLabel" class="labels">description</label>
+                        <input type="text" name="description" id="description" autocomplete="off" required>
+                    </div>
+                    <div id="dueContainer">
+                        <label for="dueDate" id="dueDateLabel"></label>
+                        <input type="date" name="dueDate" id="dueDate" required>
+                    </div>
+                    
+                    <div id="labelRadio">
+                        <p id="radioTitle">priority:</p>
+                        <br>
+                            <label for="priority" id="priorityLabel" class="labels"></label>
+                            <input type="radio" name="priority" class="priority" checked>
+                            <p class="radioText">low</p>
+                        
+                            <label for="priority" id="priorityLabel" class="labels"></label>
+                            <input type="radio" name="priority" class="priority">
+                            <p class="radioText">medium</p>
+                        
+                            <label for="priority" id="priorityLabel" class="labels"></label>
+                            <input type="radio" name="priority" class="priority">
+                            <p class="radioText">high</p>
+                        
+                    </div>
+                    <div id="submitContainer">
+                        <input id="taskSubmit" type="submit" value="submit"></input>
+                    </div>
+                </form>
+            </div>
+            <div id="content">
+                <h3 id="tasks">Tasks</h1>
+                <div class="itemsContainer">
+                    <div class="item"><input type="checkbox"></div>
+                    <div class="item"><p>Get Changed</p></div>
+                    <div class="item"><p>Look in wardrobe for hoody and put over head. Changed socks and boxers. Throw on jeans.</p></div>
+                    <div class="item"><p>Jun 9th</p></div>
+                    <div class="item"><p>High</p></div>
+                    <div class="item"><button>🗑️</button></div>
+                </div>
+            </div>
+        </div>
+        <script src="main.js"></script>
+    </body>
+</html>
