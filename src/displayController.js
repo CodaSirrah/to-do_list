@@ -110,6 +110,7 @@ function removeProjectEvent()  {
 
       let taskNameDiv = document.createElement("div");
       let taskName = document.createElement("p");
+      taskName.style.fontWeight = "900";
       taskName.innerHTML = task[i].title;
        
       let taskDescriptionDiv = document.createElement("div");
@@ -125,8 +126,9 @@ function removeProjectEvent()  {
       taskPriority.innerHTML = task[i].priority;
       
       let taskRemoveDiv = document.createElement("div");
-      let taskRemove = document.createElement("button");
-      taskRemove.innerHTML = "🗑️";
+      let taskRemove = document.createElement("img");
+      taskRemove.setAttribute("src", "iconfinder_trash_4115238.png");
+      taskRemove.classList.add("imgBin");
       taskRemove.setAttribute("data-num", i);
 
       if (task[i].complete == true) {
