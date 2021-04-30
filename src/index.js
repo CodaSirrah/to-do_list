@@ -3,7 +3,7 @@ import displayController from "./displayController";
 
 //selectors
 const main = document.querySelector("#main");
-const taskBtn = document.querySelector("#taskButton");
+const taskBtn = document.querySelector("#taskBtn");
 const taskForm = document.querySelector("#formContainer");
 const taskSubmit = document.querySelector("#taskSubmit");
 const projectBtn = document.querySelector("#projectBtn");
@@ -28,9 +28,8 @@ const logic = () => {
                 } else {
                     task.priority = "high";
                 }
+                task.complete = false;
                 array.push(task);
-                console.log(projectArray);
-                console.log(array);
     }
 
     const pushProject = (proj) => {
@@ -54,7 +53,6 @@ const logic = () => {
     }
 
     const removeProject = (target) => {
-        console.log(projectArray);
         for (let i = 0; i < target.length; i++) {
             target[i].removeEventListener("click", removeProjectEvent);
             target[i].addEventListener("click", removeProjectEvent);
@@ -63,14 +61,47 @@ const logic = () => {
     }
 
     function removeProjectEvent()  {
-        for (let i = 0; i < projectArray.length; i++) {
-            if (projectArray[i].title == this.parentElement.childNodes[0].childNodes[0].innerHTML) {
-                projectArray.splice(i, 1);
-            }   
-            if (projectName == projectArray[projectNumber].title) {
-                displayController().showTasks(main, content, projectArray[projectNumber].tasks)
+        if (projectArray[projectNumber].title == this.parentElement.childNodes[0].childNodes[0].innerHTML) {
+            projectArray.splice(projectNumber, 1);
+            displayController().showNoTasks(main);
+        }
+        else {
+            for (let i = 0; i < projectArray.length; i++) {
+                if (projectArray[i].title == this.parentElement.childNodes[0].childNodes[0].innerHTML) {
+                    projectArray.splice(i, 1);
+                }   
             }
         }
+    }
+
+    const removeTask = (target, array) => {
+        for (let i = 0; i < array.length; i++) {
+            target[i].childNodes[5].removeEventListener("click", removeTaskEvent);
+            target[i].childNodes[5].addEventListener("click", removeTaskEvent);
+        }
+    }
+    function removeTaskEvent() {
+        projectArray[projectNumber].tasks.splice(this.childNodes[0].dataset.num, 1);
+        displayController().showTasks(main, projectArray[projectNumber].tasks) 
+        logic().removeTask(document.getElementsByClassName("itemsContainer"), projectArray[projectNumber].tasks);
+    }
+
+    const taskComplete = (target, array) => {
+        
+        for (let i = 0; i < array.length; i++) {
+            target[i].childNodes[0].childNodes[0].removeEventListener("click", taskCompleteEvent);
+            target[i].childNodes[0].childNodes[0].addEventListener("click", taskCompleteEvent);
+        }
+    }
+
+    function taskCompleteEvent() {
+        if (projectArray[projectNumber].tasks[this.dataset.num].complete == false) {
+            projectArray[projectNumber].tasks[this.dataset.num].complete = true;
+        }
+        else projectArray[projectNumber].tasks[this.dataset.num].complete = false;
+        displayController().showTasks(main, projectArray[projectNumber].tasks);
+        logic().removeTask(document.getElementsByClassName("itemsContainer"), projectArray[projectNumber].tasks);
+        logic().taskComplete(document.getElementsByClassName("itemsContainer"), projectArray[projectNumber].tasks);
     }
 
     const currentProject = (target) => {
@@ -83,9 +114,10 @@ const logic = () => {
         projectName = (this.childNodes[0].innerHTML);
         for (let i = 0; i < projectArray.length; i++) {
             if (projectName == projectArray[i].title)  {
-                console.log(projectArray[i]);
                 projectNumber = i;
-                return displayController().showTasks(main, content, projectArray[projectNumber].tasks)
+                displayController().showTasks(main, projectArray[projectNumber].tasks)
+                logic().removeTask(document.getElementsByClassName("itemsContainer"), projectArray[projectNumber].tasks);
+                logic().taskComplete(document.getElementsByClassName("itemsContainer"), projectArray[projectNumber].tasks);
             }
         }
     }   
@@ -94,7 +126,7 @@ const logic = () => {
         array.push(project);
     }
 
-    return {newTask, removeProject, newProject, pushProject, currentProject, defaultProjects};
+    return {newTask, removeTask, taskComplete, removeProject, newProject, pushProject, currentProject, defaultProjects};
 }
 
 //Fetch a username on first visit and store/display it.
@@ -121,7 +153,9 @@ taskSubmit.addEventListener("click", (e) => {
     if (document.querySelector("#taskForm").checkValidity()) {
         e.preventDefault();
         logic().newTask(projectArray[projectNumber].tasks, document.querySelectorAll("input"), classMould = new Todo("task"));
-        displayController().showTasks(main, content, projectArray[projectNumber].tasks);
+        displayController().showTasks(main, projectArray[projectNumber].tasks);
+        logic().removeTask(document.getElementsByClassName("itemsContainer"), projectArray[projectNumber].tasks);
+        logic().taskComplete(document.getElementsByClassName("itemsContainer"), projectArray[projectNumber].tasks);
     }
 })
 
@@ -140,3 +174,14 @@ projectSubmit.addEventListener("click", (e) => {
 })
 
 
+
+
+/*
+embed a hidden element as part of the dom that contains the iteration number of the loop when it generated.
+Parse that number through "this" into the removeTask function in logic and call showTasks again to update the number.
+
+
+
+
+
+*/

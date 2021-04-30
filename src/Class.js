@@ -8,6 +8,7 @@ Todo.prototype.title;
 Todo.prototype.description;
 Todo.prototype.dueDate;
 Todo.prototype.priority;
+Todo.prototype.complete
 
 class User {
     constructor(name) {
