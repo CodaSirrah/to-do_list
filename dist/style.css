@@ -82,7 +82,7 @@ html, body {
 #sidebar {
     box-sizing: border-box;
     position: absolute;
-    width: 18vw;
+    width: 300px;
     height: 94.4%;
     top: 5.6%;
     margin: 0;
@@ -111,7 +111,7 @@ html, body {
     -webkit-text-fill-color: transparent;
     text-align: center;
     text-decoration: underline;
-    font-size: 2.8vmin;
+    font-size: 40px;
 
 }
 
@@ -129,23 +129,12 @@ li {
     display: grid;
     grid-template-columns: 80% 20%;
     border: 2px solid #4E73DA2F;
-    height: 48px;
+    height: 60px;
     width: 200px;
     margin: 20px auto;
     border-radius: 5px;
     background-color: white;
-}
-
-.imgBin {
-    background-image: url(./iconfinder_trash_4115238.png);
-    height: 30px;
-    width: 30px;
-    box-shadow: 0 1px 3px 0 hsla(0, 0%, 0%, 0.2);
-}
-
-.imgBin:hover {
-    cursor: pointer;
-    transform: scale(1.1);
+    margin-left: 0px;
 }
 
 .selectedBG {
@@ -163,22 +152,26 @@ li:hover {
 
 li > div > p {
     display: flex;
-    align-items: center;
+    align-self: center;
     font-size:  15px;
     margin-left: 20px;
+    margin: auto,;
     font-weight: 900;
     z-index: 10;
 }
 
-li > button {
+li > .remove {
     position: relative;
     height: 30px;
     width: 30px;
-    font-size: 20px;
-    border: 2px solid #4E73DA2F;
     z-index: 10;
-    margin: auto 0;
-    background-color: hsl(210, 9%, 96%);
+    align-self: center;
+    margin: 0 auto;
+}
+
+.remove:hover {
+    cursor: pointer;
+    transform: scale(1.1);
 }
 
 li > button:hover {
@@ -364,7 +357,7 @@ form {
     color: #ff8177;
     left: 0;
     text-align: center;
-    font-size: 23px;  
+    font-size: 25px;  
 }
 
 .itemsContainer {
@@ -377,9 +370,44 @@ form {
     background-color: hsl(210, 9%, 96%);
 }
 
+.headersContainer {
+    display: grid;
+    margin: 20px auto;
+    grid-template-columns: 5% 20% 40% 10% 15% 10%;
+    width: 95%;
+    height: 10%;
+}
+
 .item {
     margin: auto 5px;
     align-self: center;
+}
+
+.header {
+    margin: auto 5px;
+    align-self: center;
+    font-size: 18px;
+    text-decoration: underline;
+}
+
+.italic {
+    font-style: italic;
+}
+
+.center {
+    text-align: center;
+}
+
+.imgBin {
+    background-image: url(./iconfinder_trash_4115238.png);
+    height: 30px;
+    width: 30px;
+    box-shadow: 0 1px 3px 0 hsla(0, 0%, 0%, 0.1);
+}
+
+.imgBin:hover {
+    cursor: pointer;
+    transform: scale(1.1);
 }
 
 .strikeThrough {
@@ -400,32 +428,46 @@ form {
     }
 }
 
+@media screen and (max-width: 1255px) {
+    #sidebar {
+        width: 188px;
+    }
+    #projectsHeader {
+        font-size: 30px;
+    }
+    li {
+        width: 180px;
+        margin-left: -30px;
+        height: 70px;
+    }
+}
+
 @media screen and (max-width: 1030px) {
     #sidebar {
-      
         width: 100%;
-        height: 84px;
-        overflow-x: auto;
-        overflow-y: hidden;
+        height: 150px;
+        overflow:auto;
+        white-space: nowrap;
     }
     #projectsHeader {
         text-align: left;
-        font-size: 20px;
+        font-size: 30px;
         margin-left: 10px;
-        line-height: 50px;
+        line-height: 150px;
     }
     ul {
         display: flex;
         margin: 0px 0px;
-        margin-top: -88px;
-        margin-left: 100px;
+        margin-top: -178px;
+        margin-left: 0px;
+        height: 100%;
     }
  
     li {
         display: grid;
         grid-template-columns: 1fr;
-        grid-template-rows: 70% 30%;
-        height: 60px;
+        grid-template-rows: 80% 20%;
+        height: 100px;
         width: 80px;
         margin: 10px 5px 0px 5px;
     }
@@ -437,6 +479,7 @@ form {
         font-weight: 900;
         z-index: 10;
         margin: 0 auto;
+        flex-wrap: wrap;
     }
 
     li > div {
@@ -461,8 +504,6 @@ form {
    #welcome {
        bottom: -10%;
    }
-
-   
     #content {
         width: 500px;
         height: 500px;
@@ -494,6 +535,13 @@ form {
     #tasks {
         font-size: 20px;
     }
+    .imgBin {
+        height: 20px;
+        width: 20px;
+    }
+    li > .remove {
+        height: 30px;
+        width: 30px;
 }
 
 @media screen and (max-height: 750px) {
@@ -521,5 +569,10 @@ form {
     }
     #tasks {
         font-size: 18px;
+    }
+    ul {
+        margin-left: 80px;
+        overflow-x: auto;
+        overflow-y: hidden;
     }
 }
