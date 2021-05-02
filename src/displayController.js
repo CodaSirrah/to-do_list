@@ -36,7 +36,7 @@ const displayController = () => {
       })
   }
 
-  const showProjects = (array, target, title) => {
+  const newProject = (array, target, title) => {
     for (let i = array.length - 1; i < array.length; i++) {
       let li = document.createElement("li");
       li.classList.add("projects");
@@ -62,6 +62,34 @@ const displayController = () => {
       })
     }
   }
+
+  const showProjects = (array, target) => {
+    for (let i = 0; i < array.length; i++) {
+      let li = document.createElement("li");
+      li.classList.add("projects");
+      li.setAttribute("data-selected", "false");
+      let div = document.createElement("div");
+      div.classList.add("projectBG");
+      let p = document.createElement("p");
+      p.innerHTML = array[i].title;
+      div.appendChild(p);
+      let button = document.createElement("img");
+      button.setAttribute("src", "iconfinder_delete_3325111.png");
+      button.classList.add("remove");
+      li.appendChild(div);
+      li.appendChild(button);
+      div.classList.add("hoverBG");
+      target.appendChild(li);
+      div.addEventListener("click", () => {
+        for (let i = 0; i < array.length; i++) {
+          document.querySelectorAll("li")[i].classList.remove("selectedBG");
+        }
+        li.classList.add("selectedBG");
+      })
+      
+    }
+  }
+    
 
   const removeProject = (target) => {
     for (let i = 0; i < target.length; i++) {
@@ -97,6 +125,34 @@ function removeProjectEvent()  {
     header.setAttribute("id", "tasks");
     content.appendChild(header);
     main.appendChild(content);
+    let headers = document.createElement("div");
+    headers.classList.add("headersContainer");
+    let blank = document.createElement("p");
+    let p1 = document.createElement("h5");
+    p1.innerHTML = "Title";
+    p1.classList.add("header");
+    let p2 = document.createElement("h5");
+    p2.innerHTML = "Description"
+    p2.classList.add("header");
+    let p3 = document.createElement("h5");
+    p3.innerHTML = "Due Date";
+    p3.classList.add("center");
+    p3.classList.add("header");
+    let p4 = document.createElement("h5");
+    p4.innerHTML = "Priority";
+    p4.classList.add("center");
+    p4.classList.add("header");
+    let blank2 = document.createElement("p");
+    headers.appendChild(blank);
+    headers.appendChild(p1);
+    headers.appendChild(p2);
+    headers.appendChild(p3);
+    headers.appendChild(p4);
+    headers.appendChild(blank2);
+    content.appendChild(headers);
+
+
+
 
     // create each Dom Item
     for (let i = 0; i < task.length; i++) {
@@ -120,10 +176,13 @@ function removeProjectEvent()  {
       let taskDateDiv= document.createElement("div");
       let taskDate = document.createElement("p");
       taskDate.innerHTML = task[i].dueDate;
+      taskDateDiv.classList.add("center");
         
       let taskPriorityDiv = document.createElement("div");
       let taskPriority = document.createElement("p");
       taskPriority.innerHTML = task[i].priority;
+      taskPriority.classList.add("italic");
+      taskPriority.classList.add("center");
       
       let taskRemoveDiv = document.createElement("div");
       let taskRemove = document.createElement("img");
@@ -169,7 +228,7 @@ function removeProjectEvent()  {
     }
   }
 
-  return {displayWelcome, displayForm, hideLabel, showProjects, removeProject, showTasks, showNoTasks};
+  return {displayWelcome, displayForm, hideLabel, newProject, removeProject, showProjects, showTasks, showNoTasks};
 }
 
 export default displayController
