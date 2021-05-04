@@ -45,9 +45,10 @@ const displayController = () => {
       div.classList.add("projectBG");
       let p = document.createElement("p");
       p.innerHTML = title;
+      p.classList.add("projectTitle");
       div.appendChild(p);
-      let button = document.createElement("button");
-      button.innerHTML = "x";
+      let button = document.createElement("img");
+      button.setAttribute("src", "iconfinder_delete_3325111.png");
       button.classList.add("remove");
       li.appendChild(div);
       li.appendChild(button);
@@ -72,6 +73,7 @@ const displayController = () => {
       div.classList.add("projectBG");
       let p = document.createElement("p");
       p.innerHTML = array[i].title;
+      p.classList.add("projectTitle");
       div.appendChild(p);
       let button = document.createElement("img");
       button.setAttribute("src", "iconfinder_delete_3325111.png");
@@ -90,33 +92,18 @@ const displayController = () => {
     }
   }
     
-
-  const removeProject = (target) => {
-    for (let i = 0; i < target.length; i++) {
-        target[i].removeEventListener("click", removeProjectEvent);
-    }
-    
-    for (let i = 0; i < target.length; i++) {
-        target[i].addEventListener("click", removeProjectEvent);
-    }
-}
-
-function removeProjectEvent()  {
-    this.parentElement.remove();
+  const removeProject = target => {
+    target.addEventListener("click", (e) => {
+      if (e.target.classList[0] == "remove")
+        e.target.parentElement.remove();
+    })
 }
 
   const showNoTasks = main => {
-    document.querySelector("#content").remove();
-    let content = document.createElement("div");
-    content.setAttribute("id", "content");
-    let header = document.createElement("h3");
-    header.innerHTML = "Tasks";
-    header.setAttribute("id", "tasks");
-    content.appendChild(header);
-    main.appendChild(content);
+    createHeaders(main);
   }
 
-  const showTasks = (main, task) => {
+  const createHeaders = main => {
     document.querySelector("#content").remove();
     let content = document.createElement("div");
     content.setAttribute("id", "content");
@@ -127,68 +114,67 @@ function removeProjectEvent()  {
     main.appendChild(content);
     let headers = document.createElement("div");
     headers.classList.add("headersContainer");
-    let blank = document.createElement("p");
-    let p1 = document.createElement("h5");
-    p1.innerHTML = "Title";
-    p1.classList.add("header");
-    let p2 = document.createElement("h5");
-    p2.innerHTML = "Description"
-    p2.classList.add("header");
-    let p3 = document.createElement("h5");
-    p3.innerHTML = "Due Date";
-    p3.classList.add("center");
-    p3.classList.add("header");
-    let p4 = document.createElement("h5");
-    p4.innerHTML = "Priority";
-    p4.classList.add("center");
-    p4.classList.add("header");
-    let blank2 = document.createElement("p");
-    headers.appendChild(blank);
-    headers.appendChild(p1);
-    headers.appendChild(p2);
-    headers.appendChild(p3);
-    headers.appendChild(p4);
-    headers.appendChild(blank2);
+    let headerTitle = document.createElement("h5");
+    headerTitle.innerHTML = "Title";
+    headerTitle.classList.add("header");
+    headerTitle.setAttribute("id", "hTitle");
+    let headerDescription = document.createElement("h5");
+    headerDescription.innerHTML = "Description"
+    headerDescription.classList.add("header");
+    headerDescription.setAttribute("id", "hDescription");
+    let headerDueDate = document.createElement("h5");
+    headerDueDate.innerHTML = "Due-date";
+    headerDueDate.classList.add("hCenter");
+    headerDueDate.classList.add("header");
+    headerDueDate.setAttribute("id", "hDueDate");
+    let headerPriority = document.createElement("h5");
+    headerPriority.innerHTML = "Priority";
+    headerPriority.classList.add("hCenter");
+    headerPriority.classList.add("header");
+    headerPriority.setAttribute("id", "hPriority");
+    headers.appendChild(headerTitle);
+    headers.appendChild(headerDescription);
+    headers.appendChild(headerDueDate);
+    headers.appendChild(headerPriority);
     content.appendChild(headers);
+  }
 
-
-
+  const showTasks = (main, task) => {
+    createHeaders(main);
 
     // create each Dom Item
     for (let i = 0; i < task.length; i++) {
       let div = document.createElement("div");
       div.classList.add("itemsContainer");
 
-      let taskCheckboxDiv = document.createElement("div");
       let taskCheckbox = document.createElement("input");
       taskCheckbox.setAttribute("type", "checkbox");
       taskCheckbox.setAttribute("data-num", i);
+      taskCheckbox.classList.add("item");
 
-      let taskNameDiv = document.createElement("div");
       let taskName = document.createElement("p");
       taskName.style.fontWeight = "900";
       taskName.innerHTML = task[i].title;
+      taskName.classList.add("item");
        
-      let taskDescriptionDiv = document.createElement("div");
       let taskDescription = document.createElement("p");
       taskDescription.innerHTML = task[i].description;
+      taskDescription.classList.add("item");
       
-      let taskDateDiv= document.createElement("div");
       let taskDate = document.createElement("p");
       taskDate.innerHTML = task[i].dueDate;
-      taskDateDiv.classList.add("center");
+      taskDate.classList.add("item");
         
-      let taskPriorityDiv = document.createElement("div");
       let taskPriority = document.createElement("p");
       taskPriority.innerHTML = task[i].priority;
       taskPriority.classList.add("italic");
-      taskPriority.classList.add("center");
+      taskPriority.classList.add("item");
       
-      let taskRemoveDiv = document.createElement("div");
       let taskRemove = document.createElement("img");
       taskRemove.setAttribute("src", "iconfinder_trash_4115238.png");
-      taskRemove.classList.add("imgBin");
       taskRemove.setAttribute("data-num", i);
+      taskRemove.classList.add("imgBin");
+      taskRemove.classList.add("item");
 
       if (task[i].complete == true) {
         taskName.classList.add("strikeThrough");
@@ -200,35 +186,17 @@ function removeProjectEvent()  {
       }
 
       // append all items
-      taskCheckboxDiv.appendChild(taskCheckbox);
-      taskCheckboxDiv.classList.add("item");
-      div.appendChild(taskCheckboxDiv);
-
-      taskNameDiv.appendChild(taskName);
-      taskNameDiv.classList.add("item");
-      div.appendChild(taskNameDiv);
-
-      taskDescriptionDiv.appendChild(taskDescription);
-      taskDescriptionDiv.classList.add("item");
-      div.appendChild(taskDescriptionDiv);
-
-      taskDateDiv.appendChild(taskDate);
-      taskDateDiv.classList.add("item");
-      div.appendChild(taskDateDiv);
-
-      taskPriorityDiv.appendChild(taskPriority);
-      taskPriorityDiv.classList.add("item");
-      div.appendChild(taskPriorityDiv); 
-      
-      taskRemoveDiv.appendChild(taskRemove);
-      taskRemoveDiv.classList.add("item");
-      div.appendChild(taskRemoveDiv);
-
+      div.appendChild(taskCheckbox);
+      div.appendChild(taskName);
+      div.appendChild(taskDescription);
+      div.appendChild(taskDate);
+      div.appendChild(taskPriority); 
+      div.appendChild(taskRemove);
       content.appendChild(div);
     }
   }
 
-  return {displayWelcome, displayForm, hideLabel, newProject, removeProject, showProjects, showTasks, showNoTasks};
+  return {displayWelcome, displayForm, hideLabel, newProject, showProjects, removeProject, showTasks, showNoTasks};
 }
 
 export default displayController

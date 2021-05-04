@@ -4,14 +4,14 @@ import displayController from "./displayController";
 //selectors
 const main = document.querySelector("#main");
 const taskBtn = document.querySelector("#taskBtn");
-const taskForm = document.querySelector("#formContainer");
+const taskForm = document.querySelector("#taskForm");
 const taskSubmit = document.querySelector("#taskSubmit");
 const projectBtn = document.querySelector("#projectBtn");
 const projectForm = document.querySelector("#projectForm");
 const projectSubmit = document.querySelector("#projectSubmit");
 const projectArray = [];
 let classMould;
-let projectName;
+let projectName = "";
 let projectNumber = 0;
 const allProjects = document.getElementsByClassName("hoverBG");
 const allProjectDeletes = document.getElementsByClassName("remove");
@@ -64,86 +64,83 @@ const logic = () => {
     const newProject = (array, input) => {
         let project = {};
         project = input[0].value;
+        let bool = true;
         for (let i = 0; i < array.length; i++) {
             if (array[i].title == project)
-            return alert("Please enter a unique project name");
+            bool = false;
         }
-        return logic().pushProject(project);
+        if (bool) {
+            logic().pushProject(project)
+            displayController().newProject(projectArray, document.querySelector("ul"), document.querySelectorAll("input")[0].value);
+        } else {
+             alert("Please enter a unique project name");
+        }
+        input[0].value = "";
+        document.querySelector("#projectLabel").classList.remove("hideLabel");
     }
 
-    const removeProject = (target) => {
-        for (let i = 0; i < target.length; i++) {
-            target[i].removeEventListener("click", removeProjectEvent);
-            target[i].addEventListener("click", removeProjectEvent);
+    const removeProject = target => {
+            target.addEventListener("click", (e) => {
+                if (e.target.classList[0] == "remove") {
+                    for (let i = 0; i < projectArray.length; i++) {
+                        if (e.target.parentElement.childNodes[0].childNodes[0].innerHTML == projectArray[i].title) {
+                            if (projectName == projectArray[i].title) displayController().showNoTasks(main);
+                            projectArray.splice(i, 1);    
+                        }
+                    }
+                }
+                if (projectArray[0] == undefined) {
+                    localStorage.removeItem("projects");
+                }
+                else {
+                    localStorage.setItem("projects", JSON.stringify(projectArray));
+                } 
+            });
+            
+            displayController().removeProject(target);   
+    }
+
+    const currentProject = target => {
+        target.addEventListener("click", (e) => {
+            if (e.target.classList == "projectTitle") {
+                 projectName = e.target.innerHTML;
+            } else if (e.target.classList == "projectBG hoverBG") {
+                 projectName = e.target.childNodes[0].innerHTML;   
+            }
+            for (let i = 0; i < projectArray.length; i++) {
+                if (projectName == projectArray[i].title) {
+                    projectNumber = i;
+                    displayController().showTasks(main, projectArray[projectNumber].tasks);
+                }
+            }
+            return projectName;
+        });
+    }
+
+    const taskManagement = target => {
+        function remove(e) {
+                if (e.target.classList == "imgBin item") {
+                    projectArray[projectNumber].tasks.splice(e.target.dataset.num, 1);
+                    displayController().showTasks(main, projectArray[projectNumber].tasks);
+                    localStorage.setItem("projects", JSON.stringify(projectArray));
+                }
         }
-        displayController().removeProject(target);
+        function checkComplete(e) {
+                if (e.target.tagName == "INPUT" && e.target.classList == "item") {
+                    if (projectArray[projectNumber].tasks[e.target.dataset.num].complete == false) {
+                        projectArray[projectNumber].tasks[e.target.dataset.num].complete = true;
+                    }
+                    else projectArray[projectNumber].tasks[e.target.dataset.num].complete = false;
+                    displayController().showTasks(main, projectArray[projectNumber].tasks);
+                    localStorage.setItem("projects", JSON.stringify(projectArray));
+                }
+        }
+        target.addEventListener("click", (e) => {
+            remove(e);
+            checkComplete(e);
+        })
         
-    }
-
-    function removeProjectEvent()  {
-        for (let i = 0; i < projectArray.length; i++) {
-            if (projectArray[i].title == this.parentElement.childNodes[0].childNodes[0].innerHTML && projectNumber == i) {
-                projectArray.splice(i, 1);
-                console.log(i + 1);
-                console.log(projectNumber);
-                displayController().showNoTasks(main)
-        } else if (projectArray[i].title == this.parentElement.childNodes[0].childNodes[0].innerHTML) {
-            projectArray.splice(i, 1);
-            console.log(i + 1);
-            console.log(projectNumber);
-            }
-        }
-        (projectArray[0] == undefined) ? localStorage.removeItem("projects"): localStorage.setItem("projects", JSON.stringify(projectArray));
-    }
-
-    const removeTask = (target, array) => {
-        for (let i = 0; i < array.length; i++) {
-            target[i].childNodes[5].removeEventListener("click", removeTaskEvent);
-            target[i].childNodes[5].addEventListener("click", removeTaskEvent);
-        }
-    }
-    function removeTaskEvent() {
-        projectArray[projectNumber].tasks.splice(this.childNodes[0].dataset.num, 1);
-        tasksCRUD();
-    }
-
-    const taskComplete = (target, array) => {
-        for (let i = 0; i < array.length; i++) {
-            target[i].childNodes[0].childNodes[0].removeEventListener("click", taskCompleteEvent);
-            target[i].childNodes[0].childNodes[0].addEventListener("click", taskCompleteEvent);
-        }
-    }
-
-    function taskCompleteEvent() {
-        if (projectArray[projectNumber].tasks[this.dataset.num].complete == false) {
-            projectArray[projectNumber].tasks[this.dataset.num].complete = true;
-        }
-        else projectArray[projectNumber].tasks[this.dataset.num].complete = false;
-        tasksCRUD();
-    }
-
-    const currentProject = (target, ival) => {
-        for (let i = ival; i < target.length; i++) {
-            target[i].addEventListener("click", currentProjectEvent);
-        }
-    }
-
-    function currentProjectEvent() {
-        projectName = (this.childNodes[0].innerHTML);
-        for (let i = 0; i < projectArray.length; i++) {
-            if (projectName == projectArray[i].title)  {
-                projectNumber = i;
-               tasksCRUD();
-            }
-        }
-    }   
-
-    const tasksCRUD = () => {
-        displayController().showTasks(main, projectArray[projectNumber].tasks)
-        logic().removeTask(document.getElementsByClassName("itemsContainer"), projectArray[projectNumber].tasks);
-        logic().taskComplete(document.getElementsByClassName("itemsContainer"), projectArray[projectNumber].tasks);
-        localStorage.setItem("projects", JSON.stringify(projectArray));
-    }
+    }  
 
     const defaultProjectsandTasks = () => {
         if (localStorage.getItem("projects")) {
@@ -152,9 +149,6 @@ const logic = () => {
                 projectArray.push(x[i]);
             }
             displayController().showProjects(projectArray, document.querySelector("ul"));
-            logic().currentProject(allProjects, 0);
-            logic().removeProject(allProjectDeletes);
-            tasksCRUD();
             allProjects[0].parentElement.classList.add("selectedBG");
         }
         else {
@@ -168,16 +162,12 @@ const logic = () => {
             generateTask(projectArray[2].tasks, classMould = new Todo("task"), "Rapid", "Push to 1400 in rapid.", "2021-04-30", "medium", true);
             generateTask(projectArray[2].tasks, classMould = new Todo("task"), "Blitz", "Push to 1200 in blitz.", "2021-05-30", "high", false);
             displayController().showProjects(projectArray, document.querySelector("ul"));
-            currentProject(allProjects, 0);
-            removeProject(allProjectDeletes);
             allProjects[0].parentElement.classList.add("selectedBG");
-            tasksCRUD();
             localStorage.setItem("projects", JSON.stringify(projectArray));
-
         }
     }
 
-    return {newTask, removeTask, taskComplete, removeProject, newProject, pushProject, currentProject, defaultProjectsandTasks, tasksCRUD};
+    return {newTask, taskManagement, removeProject, newProject, pushProject, currentProject, defaultProjectsandTasks};
 }
 
 //Fetch a username on first visit and store/display it.
@@ -185,7 +175,7 @@ if(!localStorage.getItem("userName")) {
     const user = new User(prompt("Enter your name:"));
     localStorage.setItem("userName", user.name);
     displayController().displayWelcome(main);
-} else {;
+} else {
     displayController().displayWelcome(main);
 }
 
@@ -201,8 +191,7 @@ taskSubmit.addEventListener("click", (e) => {
     if (document.querySelector("#taskForm").checkValidity()) {
         e.preventDefault();
         logic().newTask(projectArray[projectNumber].tasks, document.querySelectorAll("input"), classMould = new Todo("task"));
-        
-        logic().tasksCRUD();
+        displayController().showTasks(main, projectArray[projectNumber].tasks);
     }
 })
 
@@ -211,12 +200,18 @@ projectSubmit.addEventListener("click", (e) => {
         e.preventDefault();
         // Add new project to projectArray and display elements to DOM
         logic().newProject(projectArray, document.querySelectorAll("input"));
-        displayController().newProject(projectArray, document.querySelector("ul"), document.querySelectorAll("input")[0].value);
 
         // adds event that Listens and saves current Project Selected
-        logic().currentProject(allProjects, allProjects.length - 1);
 
         // adds event that listens and removes project from projectArray and removes elements from DOM
-        logic().removeProject(allProjectDeletes);
     }
 })
+
+
+displayController().showTasks(main, projectArray[0].tasks);
+projectName = projectArray[0].title;
+
+// bubbles from element.target back up to the handler.
+logic().currentProject(document.querySelector("#main"));
+logic().removeProject(document.querySelector("#main"));
+logic().taskManagement(document.querySelector("#main"));
