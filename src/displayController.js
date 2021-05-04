@@ -100,10 +100,10 @@ const displayController = () => {
 }
 
   const showNoTasks = main => {
-    createHeaders(main);
+    createTableHeaders(main);
   }
 
-  const createHeaders = main => {
+  const createTableHeaders = main => {
     document.querySelector("#content").remove();
     let content = document.createElement("div");
     content.setAttribute("id", "content");
@@ -140,7 +140,7 @@ const displayController = () => {
   }
 
   const showTasks = (main, task) => {
-    createHeaders(main);
+    createTableHeaders(main);
 
     // create each Dom Item
     for (let i = 0; i < task.length; i++) {

@@ -139,14 +139,13 @@ const logic = () => {
             remove(e);
             checkComplete(e);
         })
-        
     }  
 
     const defaultProjectsandTasks = () => {
         if (localStorage.getItem("projects")) {
-            let x = JSON.parse(localStorage.getItem("projects"));
-            for (let i = 0; i < x.length; i++) {
-                projectArray.push(x[i]);
+            let storedProjects = JSON.parse(localStorage.getItem("projects"));
+            for (let i = 0; i < storedProjects.length; i++) {
+                projectArray.push(storedProjects[i]);
             }
             displayController().showProjects(projectArray, document.querySelector("ul"));
             allProjects[0].parentElement.classList.add("selectedBG");
@@ -170,7 +169,7 @@ const logic = () => {
     return {newTask, taskManagement, removeProject, newProject, pushProject, currentProject, defaultProjectsandTasks};
 }
 
-//Fetch a username on first visit and store/display it.
+//Fetch the users name on first visit and store/display it.
 if(!localStorage.getItem("userName")) {
     const user = new User(prompt("Enter your name:"));
     localStorage.setItem("userName", user.name);
@@ -179,6 +178,8 @@ if(!localStorage.getItem("userName")) {
     displayController().displayWelcome(main);
 }
 
+
+//Event handlers for for display forms/labels.
 displayController().displayForm(taskBtn, taskForm, "true");
 displayController().displayForm(projectBtn, projectForm);
 displayController().hideLabel(document.getElementById("title"), document.getElementById("titleLabel"));
@@ -186,7 +187,7 @@ displayController().hideLabel(document.getElementById("description"), document.g
 displayController().hideLabel(document.getElementById("projectInput"), document.getElementById("projectLabel"));
 logic().defaultProjectsandTasks();
 
-// Add tasks to Task Array
+// Add/display tasks to Tasks
 taskSubmit.addEventListener("click", (e) => {
     if (document.querySelector("#taskForm").checkValidity()) {
         e.preventDefault();
@@ -194,16 +195,12 @@ taskSubmit.addEventListener("click", (e) => {
         displayController().showTasks(main, projectArray[projectNumber].tasks);
     }
 })
-
+// Add/display projects to projects
 projectSubmit.addEventListener("click", (e) => {
     if (document.querySelector("#projectForm").checkValidity()) {
         e.preventDefault();
         // Add new project to projectArray and display elements to DOM
         logic().newProject(projectArray, document.querySelectorAll("input"));
-
-        // adds event that Listens and saves current Project Selected
-
-        // adds event that listens and removes project from projectArray and removes elements from DOM
     }
 })
 
@@ -211,7 +208,7 @@ projectSubmit.addEventListener("click", (e) => {
 displayController().showTasks(main, projectArray[0].tasks);
 projectName = projectArray[0].title;
 
-// bubbles from element.target back up to the handler.
+// Event Handlers for projects and tasks.
 logic().currentProject(document.querySelector("#main"));
 logic().removeProject(document.querySelector("#main"));
 logic().taskManagement(document.querySelector("#main"));
