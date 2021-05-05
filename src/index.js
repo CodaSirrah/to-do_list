@@ -1,83 +1,85 @@
-import {Todo, User, Projects} from "./Class"
-import displayController from "./displayController";
+import { Todo, User, Projects } from './Class';
+import displayController from './displayController';
 
-//selectors
-const main = document.querySelector("#main");
-const taskBtn = document.querySelector("#taskBtn");
-const taskForm = document.querySelector("#taskForm");
-const taskSubmit = document.querySelector("#taskSubmit");
-const projectBtn = document.querySelector("#projectBtn");
-const projectForm = document.querySelector("#projectForm");
-const projectSubmit = document.querySelector("#projectSubmit");
+// selectors
+const main = document.querySelector('#main');
+const taskBtn = document.querySelector('#taskBtn');
+const taskForm = document.querySelector('#taskForm');
+const taskSubmit = document.querySelector('#taskSubmit');
+const projectBtn = document.querySelector('#projectBtn');
+const projectForm = document.querySelector('#projectForm');
+const projectSubmit = document.querySelector('#projectSubmit');
 const projectArray = [];
-let classMould;
-let projectName = "";
+let projectName = '';
 let projectNumber = 0;
-const allProjects = document.getElementsByClassName("hoverBG");
-const allProjectDeletes = document.getElementsByClassName("remove");
+const allProjects = document.getElementsByClassName('hoverBG');
 
 const logic = () => {
-    const newTask = (array, input, task) => {
-                task.title = input[2].value;
-                task.description = input[3].value;
-                task.dueDate = input[4].value;
-                if (input[5].checked == true) {
-                task.priority = "low";
-                } else if (input[6].checked == true) {
-                    task.priority = "medium";
-                } else {
-                    task.priority = "high";
-                }
-                task.complete = false;
-                array.push(task);
-                localStorage.setItem("projects", JSON.stringify(projectArray));
-                input[2].value = "";
-                input[3].value = "";
-                document.querySelector("#titleLabel").classList.remove("hideLabel");
-                document.querySelector("#descriptionLabel").classList.remove("hideLabel");
-                taskForm.classList.add('visuallyhidden');    
-                taskForm.addEventListener('transitionend', function(e) {
-                taskForm.classList.add('hidden');
-                }, { once: true
-                });
+  const newTask = (array, input, task) => {
+    const t = task;
+    t.title = input[2].value;
+    t.description = input[3].value;
+    t.dueDate = input[4].value;
+    if (input[5].checked === true) {
+      t.priority = 'low';
+    } else if (input[6].checked === true) {
+      t.priority = 'medium';
+    } else {
+      t.priority = 'high';
     }
+    t.complete = false;
+    array.push(t);
+    localStorage.setItem('projects', JSON.stringify(projectArray));
+    // eslint-disable-next-line no-param-reassign
+    input[2].value = '';
+    // eslint-disable-next-line no-param-reassign
+    input[3].value = '';
+    document.querySelector('#titleLabel').classList.remove('hideLabel');
+    document.querySelector('#descriptionLabel').classList.remove('hideLabel');
+    taskForm.classList.add('visuallyhidden');
+    taskForm.addEventListener('transitionend', () => {
+      taskForm.classList.add('hidden');
+    }, { once: true });
+  };
 
-    const generateTask = (array, task, title, description, dueDate, priority, complete) => {
-        task.title = title;
-        task.description = description;
-        task.dueDate = dueDate;
-        task.priority = priority;
-        task.complete = complete;
-        array.push(task);
+  const generateTask = (array, task, title, description, dueDate, priority, complete) => {
+    const t = task;
+    t.title = title;
+    t.description = description;
+    t.dueDate = dueDate;
+    t.priority = priority;
+    t.complete = complete;
+    array.push(t);
+  };
+
+  const pushProject = (proj) => {
+    projectArray.push(new Projects(proj));
+    localStorage.setItem('projects', JSON.stringify(projectArray));
+    projectForm.classList.add('visuallyhidden');
+    projectForm.addEventListener('transitionend', () => {
+      projectForm.classList.add('hidden');
+    }, { once: true });
+  };
+
+  const newProject = (array, input) => {
+    let project = {};
+    project = input[0].value;
+    let bool = true;
+    for (let i = 0; i < array.length; i += 1) {
+      if (array[i].title === project) {
+        bool = false;
+      }
+        
     }
-
-    const pushProject = (proj) => {
-         projectArray.push(new Projects(proj));
-         localStorage.setItem("projects", JSON.stringify(projectArray));
-         projectForm.classList.add('visuallyhidden');    
-         projectForm.addEventListener('transitionend', function(e) {
-           projectForm.classList.add('hidden');
-         }, { once: true
-         });
-    }   
-
-    const newProject = (array, input) => {
-        let project = {};
-        project = input[0].value;
-        let bool = true;
-        for (let i = 0; i < array.length; i++) {
-            if (array[i].title == project)
-            bool = false;
-        }
-        if (bool) {
-            logic().pushProject(project)
-            displayController().newProject(projectArray, document.querySelector("ul"), document.querySelectorAll("input")[0].value);
-        } else {
-             alert("Please enter a unique project name");
-        }
-        input[0].value = "";
-        document.querySelector("#projectLabel").classList.remove("hideLabel");
+    if (bool) {
+        logic().pushProject(project)
+        displayController().newProject(projectArray, document.querySelector("ul"), document.querySelectorAll("input")[0].value);
+    } else {
+          alert("Please enter a unique project name");
     }
+    input[0].value = "";
+    document.querySelector("#projectLabel").classList.remove("hideLabel");
+  }
 
     const removeProject = target => {
             target.addEventListener("click", (e) => {
@@ -154,12 +156,12 @@ const logic = () => {
             pushProject("Object Orientated Programming");
             pushProject("Fitness");
             pushProject("Chess");
-            generateTask(projectArray[0].tasks, classMould = new Todo("task"), "Practical Object-Oriented Design", "Purchase and read up on Practical Object-Oriented Design: An Agile Primer Using Ruby.", "2021-06-04", "low", false);
-            generateTask(projectArray[0].tasks, classMould = new Todo("task"), "OOP Most common Principals", "Read the article on Betterprogramming summarising the common concepts found in OOP.", "2021-05-04", "medium", true);
-            generateTask(projectArray[1].tasks, classMould = new Todo("task"), "Running", "Increment distance of each run biweekly by .5km until 10km per run", "2021-12-07", "high", false);
-            generateTask(projectArray[2].tasks, classMould = new Todo("task"), "Maroczy Bind", "Learn how to react to accelerated dragon players who create a light color complex.", "2021-05-15", "low", false);
-            generateTask(projectArray[2].tasks, classMould = new Todo("task"), "Rapid", "Push to 1400 in rapid.", "2021-04-30", "medium", true);
-            generateTask(projectArray[2].tasks, classMould = new Todo("task"), "Blitz", "Push to 1200 in blitz.", "2021-05-30", "high", false);
+            generateTask(projectArray[0].tasks, new Todo("task"), "Practical Object-Oriented Design", "Purchase and read up on Practical Object-Oriented Design: An Agile Primer Using Ruby.", "2021-06-04", "low", false);
+            generateTask(projectArray[0].tasks, new Todo("task"), "OOP Most common Principals", "Read the article on Betterprogramming summarising the common concepts found in OOP.", "2021-05-04", "medium", true);
+            generateTask(projectArray[1].tasks, new Todo("task"), "Running", "Increment distance of each run biweekly by .5km until 10km per run", "2021-12-07", "high", false);
+            generateTask(projectArray[2].tasks, new Todo("task"), "Maroczy Bind", "Learn how to react to accelerated dragon players who create a light color complex.", "2021-05-15", "low", false);
+            generateTask(projectArray[2].tasks, new Todo("task"), "Rapid", "Push to 1400 in rapid.", "2021-04-30", "medium", true);
+            generateTask(projectArray[2].tasks, new Todo("task"), "Blitz", "Push to 1200 in blitz.", "2021-05-30", "high", false);
             displayController().showProjects(projectArray, document.querySelector("ul"));
             allProjects[0].parentElement.classList.add("selectedBG");
             localStorage.setItem("projects", JSON.stringify(projectArray));
@@ -191,7 +193,7 @@ logic().defaultProjectsandTasks();
 taskSubmit.addEventListener("click", (e) => {
     if (document.querySelector("#taskForm").checkValidity()) {
         e.preventDefault();
-        logic().newTask(projectArray[projectNumber].tasks, document.querySelectorAll("input"), classMould = new Todo("task"));
+        logic().newTask(projectArray[projectNumber].tasks, document.querySelectorAll("input"), new Todo("task"));
         displayController().showTasks(main, projectArray[projectNumber].tasks);
     }
 })
